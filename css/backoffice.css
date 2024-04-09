@@ -1,0 +1,233 @@
+.process-icon-help
+{
+	background-image: url("../img/toolbar/help.png") !important;
+}
+
+.process-icon-settings
+{
+	background-image: url("../img/toolbar/setting_tools.png") !important;
+}
+
+.process-icon-csv
+{
+	background-image: url("../img/toolbar/csv_tools.png") !important;
+}
+
+.process-icon-shipment_list
+{
+	background-image: url("../img/toolbar/shipment_list.png") !important;
+}
+
+/* hides prestashop help button */
+li.help-context-AdminModules, li.help-context-adminmodules
+{
+	display: none !important;
+}
+
+#ajax_running {
+	background-color: #FFF1A8;
+	border: 1px solid #FFD96F;
+	border-radius: 0 0 3px 3px;
+	color: #000000;
+	display: none;
+	font-size: 14px;
+	font-weight: bold;
+	left: 40%;
+	padding: 5px 20px;
+	position: fixed;
+	top: 0;
+	width: 300px;
+	z-index: 10000;
+}
+
+fieldset .optionsDescription, fieldset p.description, .info {
+	background: url("../img/icon-info.png") no-repeat scroll 6px 6px #BDE5F8;
+	border: 1px solid #00529B;
+	border-radius: 3px 3px 3px 3px;
+	color: #00529B;
+	font-family: Arial,Verdana,Helvetica,sans-serif;
+	font-size: 12px;
+	margin-bottom: 15px;
+	min-height: 32px;
+	padding: 10px 5px 5px 40px;
+}
+
+#custom_web_service_container
+{
+	display: none;
+}
+
+p.connection_message
+{
+	display: none;
+}
+
+.csv_information_block
+{
+	margin-left: 100px;
+}
+
+img.pagination_image
+{
+	margin-bottom: 4px;
+}
+
+table#shipment_list tr.nodrag.nodrop a,
+table#shipment_list tr.nodrag.nodrop a:hover
+{
+	text-decoration: none;
+}
+
+#dpdgeopost_pickup_dialog
+{
+	display:none;
+	background: #EBEDF4;
+	width: 500px;
+	padding: 20px;
+}
+
+#dpdgeopost_pickup_dialog h2
+{
+	margin-bottom: 25px;
+}
+
+#dpdgeopost_pickup_dialog label
+{
+	width: 125px;
+}
+
+#dpdgeopost_pickup_dialog label sup
+{
+	color: red;
+}
+
+#dpdgeopost_pickup_dialog label.required
+{
+	color: red;
+	font-size: 10px;
+}
+
+#dpdgeopost_pickup_dialog .margin-form
+{
+	padding-top: 3px;
+	padding-left: 150px;
+}
+
+#dpdgeopost_pickup_dialog textarea
+{
+	width: 315px;
+	height: 80px;
+}
+
+#dpdgeopost_pickup_dialog .error, #content .error {
+	border-radius: 3px;
+	font-size: 12px;
+	font-weight: normal;
+	line-height: 20px;
+	margin: 0 0 20px;
+	min-height: 28px;
+	padding: 13px 5px 5px 40px;
+	background: url("../img/icon-cancel.png") no-repeat scroll 6px 6px #FFBABA;
+	border: 1px solid #CC0000;
+	color: #D8000C;
+}
+
+#address_validation_block
+{
+	display: none;
+}
+
+#custom_web_service_container input
+{
+	width: 400px;
+}
+
+#active_services .carriers_block
+{
+	width: 450px;
+	float: left;
+}
+
+#active_services .carriers_cod_block
+{
+	float: left;
+	width: 440px;
+	border-left: solid 1px #CCC;
+}
+
+.cod_selection_warning
+{
+	display: none;
+	width: auto !important;
+}
+
+div.toggle_csv_info_link_container, div.toggle_cod_info_link_container
+{
+	margin-bottom: 10px;
+	margin-top: 10px;
+}
+
+a#toggle_csv_info_link, a#toggle_cod_info_link
+{
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+a#toggle_csv_info_link:hover, a#toggle_cod_info_link:hover
+{
+	text-decoration: none;
+}
+
+div#toggle_csv_info, div#toggle_cod_info
+{
+	display: none;
+    border: 1px solid #FFFFFF;
+}
+
+div.csv_info_container, div.cod_info_container
+{
+	border: 1px solid #CCCCCC;
+	padding: 5px;
+	display: block;
+}
+
+div.csv_info_container span, div.cod_info_container span
+{
+	display: block;
+	padding: 5px;
+}
+
+div.csv_info_container span span, div.cod_info_container span span
+{
+	display: block;
+	margin: 0 0 0 30px;
+	padding: 5px;
+}
+
+#cod_settings_container div.margin-form label
+{
+	float: none;
+}
+
+.toolbarBox ul.cc_button {
+	display: inline-block;
+	width: 100%;
+	height: auto;
+	margin: 0 0 15px;
+	padding: 0;
+	list-style-type: none;
+}
+.toolbarBox ul.cc_button li {
+	display: inline-block;
+	width: auto;
+	height: auto;
+	margin: 0 15px 0 0;
+	padding: 0;
+}
+.toolbarBox ul.cc_button li:last-child {
+	margin-right: 0;
+}
+
+.clear.list.info {
+	padding-left: 40px;
+}
