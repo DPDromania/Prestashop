@@ -70,7 +70,7 @@
     {/literal}
 </script>
 {if $dpd_site_id > 0}
-    <iframe id="frameOfficeLocator" name="frameOfficeLocator" src="https://services.dpd.ro/office_locator_widget_v2/office_locator.php?lang=en&showAddressForm=0&siteID={$dpd_site_id}&showOfficesList=0&selectOfficeButtonCaption=Select this office"  width="665px" height="500px"></iframe>
+    <iframe id="frameOfficeLocator" name="frameOfficeLocator" src="https://services.dpd.ro/office_locator_widget_v3/office_locator.php?lang=en&showAddressForm=0&siteID={$dpd_site_id}&showOfficesList=0&selectOfficeButtonCaption=Select this office&countryId={$dpd_country_id}"  width="665px" height="500px"></iframe>
 {else}
-    <iframe id="frameOfficeLocator" name="frameOfficeLocator" src="https://services.dpd.ro/office_locator_widget_v2/office_locator.php?lang=en&showAddressForm=0&showOfficesList=0&selectOfficeButtonCaption=Select this office"  width="665px" height="500px"></iframe>
+    <iframe id="frameOfficeLocator" name="frameOfficeLocator" src="https://services.dpd.ro/office_locator_widget_v3/office_locator.php?lang=en&showAddressForm=0&showOfficesList=0&selectOfficeButtonCaption=Select this office&countryId={$dpd_country_id}"  width="665px" height="500px"></iframe>
 {/if}

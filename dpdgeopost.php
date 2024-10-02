@@ -45,7 +45,7 @@ class DpdGeopost extends Module
 	{
 		$this->name = 'dpdgeopost';
 		$this->tab = 'shipping_logistics';
-		$this->version = '3.0.2';
+		$this->version = '3.0.5';
 		$this->author = 'DPD Romania';
         $this->bootstrap = true;
 		parent::__construct();
@@ -621,6 +621,8 @@ class DpdGeopost extends Module
 				return _DPDGEOPOST_PALLET_ONE_ROMANIA_ID_;
             case Configuration::get(DpdGeopostConfiguration::CARRIER_DPD_LOCKER_ID):
                 return _DPDGEOPOST_LOCKER_ID_;
+            case Configuration::get(DpdGeopostConfiguration::CARRIER_TIERS_ID):
+                return _DPDGEOPOST_TIRES_ID_;
             default:
 				return false;
 		}
@@ -1517,7 +1519,8 @@ class DpdGeopost extends Module
             } else {
                 $this->smarty->assign('dpd_site_id', 0);
             }
-
+            $countryInDb = new Country($address->id_country);
+            $this->smarty->assign('dpd_country_id', $this->getCountryId($countryInDb->iso_code));
             return $this->display(__FILE__, 'locker_options_map.tpl');
         }
 
@@ -1890,6 +1893,67 @@ class DpdGeopost extends Module
         }
 
         return trim($convert_address_str);
+    }
+
+    public function getCountryId($code)
+    {
+        switch ($code) {
+            case 'RO':
+                return 642;
+            case 'BG':
+                return 100;
+            case 'GR':
+                return 300;
+            case 'HU':
+                return 348;
+            case 'PL':
+                return 616;
+            case 'SL':
+                return 703;
+            case 'SK':
+                return 705;
+            case 'CZ':
+                return 203;
+            case 'HR':
+                return 191;
+            case 'AT':
+                return 40;
+            case 'IT':
+                return 380;
+            case 'DE':
+                return 276;
+            case 'ES':
+                return 724;
+            case 'FR':
+                return 250;
+            case 'NL':
+                return 528;
+            case 'BE':
+                return 56;
+            case 'EE':
+                return 233;
+            case 'DK':
+                return 208;
+            case 'LU':
+                return 442;
+            case 'LV':
+                return 428;
+            case 'LT':
+                return 440;
+            case 'FI':
+                return 246;
+            case 'PT':
+                return 620;
+            case 'SE':
+                return 752;
+            default:
+                return 642;
+        }
+    }
+
+    public function getAllowedCountryCodes()
+    {
+        return ['RO', 'BG', 'GR', 'HU', 'PL', 'SL', 'SK', 'CZ', 'HR', 'AU', 'IT', 'DE', 'ES', 'FR','NL', 'BE', 'EE', 'DK', 'LU', 'LV', 'LT', 'FI', 'PT', 'SE'];
     }
 
 }

@@ -30,8 +30,8 @@ class DpdGeopostConfigurationController extends DpdGeopostController
 
         $availableServices['25052'] = [
             'id' => 25052,
-            'name' => 'DPD Standard Locker',
-            'nameEn' => 'DPD Standard Locker',
+            'name' => 'DPD OOH Locker/Office',
+            'nameEn' => 'DPD OOH Locker/Office',
             'additionalServices' => [
 
             ]
@@ -113,7 +113,10 @@ class DpdGeopostConfigurationController extends DpdGeopostController
                 'name' => DpdGeopostConfiguration::SERVICE_FASTIUS_EXPRESS_2H,
                 'checked' => DPDGeopost::getInputValue(DpdGeopostConfiguration::SERVICE_FASTIUS_EXPRESS_2H, $configuration->active_services_fastius_express_2h) == 1,
             ),
-
+            2704 => array(
+                'name' => DpdGeopostConfiguration::SERVICE_TIRES,
+                'checked' => DPDGeopost::getInputValue(DpdGeopostConfiguration::SERVICE_TIRES, $configuration->active_services_tires) == 1,
+            ),
             25052 => array(
                 'name' => DpdGeopostConfiguration::SERVICE_STANDARD_LOCKER,
                 'checked' => DPDGeopost::getInputValue(DpdGeopostConfiguration::SERVICE_STANDARD_LOCKER, $configuration->active_services_locker) == 1,
@@ -191,7 +194,7 @@ class DpdGeopostConfigurationController extends DpdGeopostController
         require_once(_DPDGEOPOST_CLASSES_DIR_ . 'dpd_cargo_national.service.php');
         require_once(_DPDGEOPOST_CLASSES_DIR_ . 'dpd_international_express.service.php');
         require_once(_DPDGEOPOST_CLASSES_DIR_ . 'dpd_standard_locker.service.php');
-
+        require_once (_DPDGEOPOST_CLASSES_DIR_ . 'dpd_tires.service.php');
 
         if (Tools::getValue(DpdGeopostConfiguration::SERVICE_CLASSIC)) {
             if (!DpdGeopostCarrierClassicService::install())
@@ -341,7 +344,15 @@ class DpdGeopostConfigurationController extends DpdGeopostController
             }
         }
 
-
+        if (Tools::getValue(DpdGeopostConfiguration::SERVICE_TIRES)) {
+            if (!DpdGeopostTiresService::install()) {
+                self::$errors[] = $this->l('Could not save DPD TIRES');
+            }
+        } else {
+            if (!DpdGeopostTiresService::delete()) {
+                self::$errors[] = $this->l('Could not delete DPD TIRES');
+            }
+        }
 
         if (Tools::getValue(DpdGeopostConfiguration::SERVICE_STANDARD_LOCKER)) {
             if (!DpdGeopostCarrierStandardLockerService::install()) {

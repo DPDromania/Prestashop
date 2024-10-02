@@ -34,6 +34,8 @@ class DpdGeopostConfiguration extends DpdGeopostObjectModel
 	const SERVICE_FASTIUS_EXPRESS_2H = 'DPD_GEOPOST_SERVICE_FASTIUS_EXPRESS_2H';
 	const SERVICE_PALLET_ONE_ROMANIA = 'DPD_GEOPOST_SERVICE_PALLET_ONE_ROMANIA';
 
+    const SERVICE_TIRES = 'DPD_TIRES';
+
 	const PACKING_METHOD 							= 'DPD_GEOPOST_PACKING_METHOD';
 	const COUNTRY 									= 'DPD_GEOPOST_COUNTRY';
 	const PRODUCTION_URL 							= 'DPD_GEOPOST_PRODUCTION_URL';
@@ -78,6 +80,7 @@ class DpdGeopostConfiguration extends DpdGeopostObjectModel
 
     const CARRIER_DPD_LOCKER_ID				    = 'DPD_GEOPOST_COD_LOCKER_ID';
 
+    const CARRIER_TIERS_ID = 'DPD_GEOPOST_CARRIER_TIRES_ID';
     const IS_COD_CARRIER_CLASSIC					= 'DPD_GEOPOST_IS_COD_CLASSIC';
 	const IS_COD_CARRIER_LOCCO					    = 'DPD_GEOPOST_IS_COD_LOCCO';
 	const IS_COD_CARRIER_INTERNATIONAL			    = 'DPD_GEOPOST_IS_COD_INTERNATIONAL';
@@ -175,6 +178,8 @@ class DpdGeopostConfiguration extends DpdGeopostObjectModel
 	public $active_services_pallet_one_romania = 0;
 
     public $active_services_locker = 0;
+
+    public $active_services_tires = 0;
 
 	public $active_services_classic_predict = 0;
 	public $active_services_classic_1_parcel_predict = 0;
@@ -353,6 +358,11 @@ class DpdGeopostConfiguration extends DpdGeopostObjectModel
                 'data' => 0,
                 'method_id' => _DPDGEOPOST_INTERNATIONAL_EXPRESS_ID_
             ),
+            self::SERVICE_TIRES => array(
+                'label' => 'DPD TIRES',
+                'data' => 0,
+                'method_id' => _DPDGEOPOST_INTERNATIONAL_EXPRESS_ID_
+            ),
             self::SERVICE_STANDARD_LOCKER => array(
                 'label' => 'DPD Locker',
                 'data' => 0,
@@ -406,7 +416,7 @@ class DpdGeopostConfiguration extends DpdGeopostObjectModel
 		$success &= Configuration::updateValue(self::SERVICE_FASTIUS_EXPRESS, (int)Tools::getValue(self::SERVICE_FASTIUS_EXPRESS) );
 		$success &= Configuration::updateValue(self::SERVICE_FASTIUS_EXPRESS_2H, (int)Tools::getValue(self::SERVICE_FASTIUS_EXPRESS_2H) );
 		$success &= Configuration::updateValue(self::SERVICE_PALLET_ONE_ROMANIA, (int)Tools::getValue(self::SERVICE_PALLET_ONE_ROMANIA) );
-
+        //$success &= Configuration::updateValue(self::SERVICE_DPD_TIRES, (int)Tools::getValue(self::SERVICE_DPD_TIRES) );
 
         $success &= Configuration::updateValue(self::SERVICE_STANDARD_LOCKER, (int)Tools::getValue(self::SERVICE_STANDARD_LOCKER) );
 
@@ -546,7 +556,7 @@ class DpdGeopostConfiguration extends DpdGeopostObjectModel
 		$carrier_fastius_express_id = (int)Configuration::get(self::CARRIER_FASTIUS_EXPRESS_ID);
 		$carrier_fastius_express_2h_id = (int)Configuration::get(self::CARRIER_FASTIUS_EXPRESS_2H_ID);
 		$carrier_pallet_one_romania_id = (int)Configuration::get(self::CARRIER_PALLET_ONE_ROMANIA_ID);
-
+        $carrier_tires_id = (int)Configuration::get(self::CARRIER_TIERS_ID);
         $carrier_standard_locker_id = (int)Configuration::get(self::CARRIER_DPD_LOCKER_ID);
 
         $carrier_cargo_regional_id = (int)Configuration::get(self::CARRIER_CARGO_REGIONAL_ID);
@@ -820,7 +830,21 @@ class DpdGeopostConfiguration extends DpdGeopostObjectModel
 				$this->active_services_pallet_one_romania = 0;
 			}
 		}
+        if($carrier_tires_id) {
+            if(version_compare(_PS_VERSION_, '1.5', '<'))
+            {
+                $id_carrier = (int)DpdGeopostCarrier::getIdCarrierByReference((int)$carrier_tires_id);
+                $carrier = new Carrier((int)$id_carrier);
+            } else {
+                $carrier = Carrier::getCarrierByReference((int) $carrier_tires_id);
+            }
 
+            if(Validate::isLoadedObject($carrier)) {
+                $this->active_services_tires = ($carrier->active && !$carrier->deleted) ? 1 : 0;
+            } else {
+                $this->active_services_tires = 0;
+            }
+        }
         if($carrier_standard_locker_id) {
             if(version_compare(_PS_VERSION_, '1.5', '<'))
             {

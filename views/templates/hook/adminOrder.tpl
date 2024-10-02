@@ -655,6 +655,11 @@
                     <select id="dpd_shipping_method" autocomplete="off" {if $shipment->id_shipment &&
                     $shipment->id_manifest} disabled="disabled"{/if}>
                         <option value="">-</option>
+                        {if $settings->active_services_locker }
+                            <option value="{$smarty.const._DPDGEOPOST_LOCKER_ID_}" {if $selected_shipping_method_id == $smarty.const._DPDGEOPOST_LOCKER_ID_ || !empty($selectedOfficeId)} selected="selected" {/if}>
+                                DPD Standard Locker
+                            </option>
+                        {/if}
                         {if $settings->active_services_classic}
                             <option value="{$smarty.const._DPDGEOPOST_CLASSIC_ID_}" {if $shipment->mainServiceCode==1 ||
                             $selected_shipping_method_id==1} selected="selected"{/if}>{l s='DPD Classic'
@@ -701,8 +706,8 @@
                                 DPD Classic Poland
                             </option>
                         {/if}
-                        {if $settings->active_services_standard_24}
-                            <option value="{$smarty.const._DPDGEOPOST_STANDARD_24_ID_}" {if $selected_shipping_method_id == $smarty.const._DPDGEOPOST_STANDARD_24_ID_ } selected="selected" {/if}>
+                        {if $settings->active_services_standard_24 }
+                            <option value="{$smarty.const._DPDGEOPOST_STANDARD_24_ID_}" {if $selected_shipping_method_id == $smarty.const._DPDGEOPOST_STANDARD_24_ID_ && empty($selectedOfficeId)} selected="selected" {/if}>
                                 DPD Standard 24
                             </option>
                         {/if}
@@ -721,11 +726,12 @@
                                 DPD Pallet One Romania
                             </option>
                         {/if}
-                        {if $settings->active_services_locker}
-                            <option value="{$smarty.const._DPDGEOPOST_LOCKER_ID_}" {if $selected_shipping_method_id == $smarty.const._DPDGEOPOST_LOCKER_ID_ } selected="selected" {/if}>
-                                DPD Standard Locker
+                        {if $settings->active_services_tires }
+                            <option value="{$smarty.const._DPDGEOPOST_TIRES_ID_}" {if $selected_shipping_method_id == $smarty.const._DPDGEOPOST_TIRES_ID_} selected="selected" {/if}>
+                                DPD TIRES
                             </option>
                         {/if}
+
                     </select>
                 </td>
             </tr>

@@ -146,7 +146,7 @@ class DpdGeopostShipment extends DpdGeopostWs
             'privatePerson' => true
         );
         $service = array(
-            'serviceIds' => array($this->mapNewServiceIds((int)$id_method)),
+            'serviceIds' => array($this->mapNewServiceIds((int)$id_method, $country->iso_code)),
             //'pickupDate' => $pickupDate ? $pickupDate : date('Y-m-d'),
             'autoAdjustPickupDate' => true,
         );
@@ -154,10 +154,12 @@ class DpdGeopostShipment extends DpdGeopostWs
 
 
         if ($id_method == _DPDGEOPOST_LOCKER_ID_) {
-            $service = [
-                'serviceIds' => array(_DPDGEOPOST_STANDARD_24_ID_),
-                'autoAdjustPickupDate' => true,
-            ];
+            if ($country->iso_code == 'RO') {
+                $service = [
+                    'serviceIds' => array(_DPDGEOPOST_STANDARD_24_ID_),
+                    'autoAdjustPickupDate' => true,
+                ];
+            }
 
             $recipient = array(
                 'phone1' => array(
@@ -425,7 +427,7 @@ class DpdGeopostShipment extends DpdGeopostWs
             'receiverStreet' => $street,
             'receiverHouseNo' => '',
             'receiverPhoneNo' => $address->phone_mobile ? pSQL($address->phone_mobile) : pSQL($address->phone),
-            'mainServiceCode' => $this->mapNewServiceIds((int)$id_method),
+            'mainServiceCode' => $this->mapNewServiceIds((int)$id_method, $country->iso_code),
             'shipmentReferenceNumber' => version_compare(_PS_VERSION_, '1.5', '<') ? pSQL($order->secure_key) : pSQL(self::getOrderReference((int)$order->id)),
             'additionalInfo' => 'additional info test',
             'receiverEmail' => pSQL($customer->email)
@@ -448,6 +450,26 @@ class DpdGeopostShipment extends DpdGeopostWs
                             '1.5',
                             '<'
                         ) ? (float)$order->total_paid : (float)$order->total_paid_tax_incl,
+                        'currency' => pSQL($currency->iso_code),
+                        'paymentType' => self::PAYMENT_TYPE,
+                        'referenceNumber' => version_compare(
+                            _PS_VERSION_,
+                            '1.5',
+                            '<'
+                        ) ? pSQL($order->secure_key) : pSQL(self::getOrderReference((int)$order->id)),
+                    ),
+                );
+            } else if ($order->module == 'ps_cashondelivery') {
+                $cod_fee = 0;
+                $currency = new Currency((int)$order->id_currency);
+
+                $params['additionalServices'] = array(
+                    'cod' => array(
+                        'amount' => version_compare(
+                            _PS_VERSION_,
+                            '1.5',
+                            '<'
+                        ) ? (float)$order->total_paid + $cod_fee: (float)$order->total_paid_tax_incl + $cod_fee,
                         'currency' => pSQL($currency->iso_code),
                         'paymentType' => self::PAYMENT_TYPE,
                         'referenceNumber' => version_compare(
@@ -724,13 +746,25 @@ class DpdGeopostShipment extends DpdGeopostWs
             if(!$prestashopRules) {
                 // DACA webservice SI dpdpayment ATUNCI valoare dpdpayment vine direct din webservice, ignoram ce este setat in admin si excludem shipping tax
                 $cod_amount = $cod_amount - floatval($order->total_shipping_tax_incl);
-
-                if(Configuration::get(DpdGeopostConfiguration::PRICE_CALCULATION_INCLUDE_SHIPPING) == 'yes') {
-                    $includesShipping = true;
-                }
-
             }
 
+
+            if (pSQL($currentCurrency->iso_code) == 'HUF') {
+                $cod_amount = ceil($cod_amount);
+            }
+
+            $shipmentPayload['service']['additionalServices']['cod'] = array(
+                'amount' => $cod_amount,
+                'currencyCode' => pSQL($currentCurrency->iso_code),
+                'includeShippingPrice' => $includesShipping
+            );
+        } else if ($order->module == 'ps_cashondelivery'){
+            $cod_fee =  0;
+            $cod_amount = floatval($order->total_paid_tax_incl) + $cod_fee;
+
+            if ($payer == DpdGeopostConfiguration::COURIER_SERVICE_PAYER_RECIPIENT) {
+                $cod_amount = $cod_amount - floatval($order->total_shipping_tax_incl) ;
+            }
 
             if (pSQL($currentCurrency->iso_code) == 'HUF') {
                 $cod_amount = ceil($cod_amount);
@@ -1374,6 +1408,7 @@ class DpdGeopostShipment extends DpdGeopostWs
             $parcel['weight'] = ((float)$product_weight) * $product['cart_quantity'];
             $parcel['width'] = $product['product_width'];
             $parcel['height'] = $product['product_height'];
+            $parcel['quantity'] = $product['cart_quantity'];
             $parcel['depth'] = $product['product_depth'];
 
             if ($all_products_in_one_parcel && !empty($parcels)) {
@@ -1462,7 +1497,8 @@ class DpdGeopostShipment extends DpdGeopostWs
             case _DPDGEOPOST_PALLET_ONE_ROMANIA_ID_:
                 return Configuration::get(DpdGeopostConfiguration::CARRIER_PALLET_ONE_ROMANIA_ID);
 
-
+            case _DPDGEOPOST_TIRES_ID_:
+                return Configuration::get(DpdGeopostConfiguration::CARRIER_TIERS_ID);
             case _DPDGEOPOST_INTERNATIONAL_ID_:
                 return Configuration::get(DpdGeopostConfiguration::CARRIER_INTERNATIONAL_ID);
 
@@ -1691,7 +1727,7 @@ class DpdGeopostShipment extends DpdGeopostWs
     }
 
     private
-    function mapNewServiceIds($oldServiceId)
+    function mapNewServiceIds($oldServiceId, $countryCode)
     {
         $services = [
             1 => 2505,
@@ -1703,6 +1739,16 @@ class DpdGeopostShipment extends DpdGeopostWs
             2205 => 2212, //greece,
             2212 => 2212
         ];
+
+        $east = ['BG', 'PL', 'CZ', 'HU', 'GR', 'SL', 'SK', 'HR' ];
+        $west = ['AT', 'BE', 'DK', 'FR', 'DE', 'IT', 'LU', 'NL', 'FI', 'PT', 'SE', 'EE', 'LU', 'LV', 'LT'];
+        if ($oldServiceId == 25051 && in_array($countryCode, $east, true)) {
+            return 2212;
+        }
+
+        if ($oldServiceId == 25051 && in_array($countryCode, $west, true)) {
+            return 2303;
+        }
 
         return isset($services[$oldServiceId]) ? $services[$oldServiceId] : $oldServiceId;
     }
