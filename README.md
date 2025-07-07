@@ -1,15 +1,23 @@
 ## Changelog
 Mantainer: DPD Romania <api.support@dpd.ro>
 
-### 2022-03-15 - v2.19.1
-- fix for notice warning when serviceId is not known yet
-- make Reusable Return appear and disappear dynamically based on the selected shipping method before shipment creation
+DPD Romania Courier shipping method plugin
 
-### 2022-03-14 - v2.19.0
-- for DPD Standard add a new option to create shipment - Reusable Return - and change the serviceId in swap to 2007
-- ability to set in dpd module configuration a default weight to be used in shipment and price calculation when the product has no weight set in admin
+== Description ==
 
-### 2022-02-07 - v2.18.0
-- fixed bug where continue button was deactivated when coming back to a non DPD delivery option
-- fixed bug where pickup delivery method took priority if dpd_office was set, even if it was a home delivery in price calculation and label creation
-- update price calculation in frontend when changing from delivery office to home delivery and vice versa
+= Overview =
+
+This plug-in is intended to implement a new shipping method using the DPD Romania service. As a store owner, after installing the plugin, you are able to import the list of DPD Romania service and delivery points assigned to your account. If your customer chooses the order to be delivered with DPD Romania, you will be able to see this in the list of commands in your store's administration panel. You will also be able to create an AWB. You can then add a new parcel in the created AWB and show the AWB as a pdf format. If you want, you can show the AWB history or delete the AWB.
+
+For further information, contact us at api.support[at]dpd.ro !
+
+= Features =
+
+    Config DPD Romania shipping method
+    Import DPD Romania pickup-points
+    Import DPD Romania services
+    Import DPD Romania lockers
+    Show AWB as PDF format
+    Add new parcel in AWB
+    Drop-down Romanian cities
+    Show map network DPD Ro an UE OOH (office, lockers, dpd shops)
