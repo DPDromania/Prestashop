@@ -923,6 +923,8 @@ class DpdGeopostShipment extends DpdGeopostWs
                 self::$errors[] = $this->l('Parcels could not be saved locally');
                 return false;
             }
+        } else {
+            return false;
         }
 
 

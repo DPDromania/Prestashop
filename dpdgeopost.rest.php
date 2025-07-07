@@ -123,6 +123,14 @@ class DpdGeopostWS extends DpdGeopostController
 
 			$callResultDecoded = json_decode($callResult, true);
 
+            if (json_last_error() !== JSON_ERROR_NONE) {
+                $callResultDecoded =  ['error' => [
+                    'context' => $callResult
+                    ]
+                ];
+                //self::$errors[] = 'Wrong response received from api:' . $callResult;
+            }
+
             $dataToLog['times'] = $times;
             $dataToLog['result_raw'] = $callResult;
             $dataToLog['payload_json'] = $data_string;
