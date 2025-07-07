@@ -1,5 +1,5 @@
 ## Changelog
-Mantainer: Bogdan Ivanov <contact@jarbot.tech>
+Mantainer: DPD Romania <api.support@dpd.ro>
 
 ### 2022-03-15 - v2.19.1
 - fix for notice warning when serviceId is not known yet
