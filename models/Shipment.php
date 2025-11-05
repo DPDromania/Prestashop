@@ -1396,10 +1396,14 @@ class DpdGeopostShipment extends DpdGeopostWs
         if (empty($defaultWeight)) {
             $defaultWeight = 0.1;
         }
-
+        $maxWidth = 0;
+        $maxHeight = 0;
+        $maxDepth = 0;
+        $quantity = 0;
         foreach ($products as &$product) {
             $this->extractAndFormatProductData($product);
             $parcel = array();
+            $quantity++;
 
             $product_weight = $product['product_weight'];
             if (empty($product_weight)) {
@@ -1413,8 +1417,30 @@ class DpdGeopostShipment extends DpdGeopostWs
             $parcel['quantity'] = $product['cart_quantity'];
             $parcel['depth'] = $product['product_depth'];
 
+            if ($product['product_width'] > $maxWidth) {
+                $maxWidth = $product['product_width'];
+            }
+
+            if ($product['product_height'] > $maxHeight) {
+                $maxHeight = $product['product_height'];
+            }
+
+            if ($product['product_depth'] > $maxDepth) {
+                $maxDepth = $product['product_depth'];
+            }
+
             if ($all_products_in_one_parcel && !empty($parcels)) {
                 $parcels[0]['description'] .= ', ' . $parcel['description'];
+                if (!isset($parcels[0]['weight'])) {
+                    $parcels[0]['weight'] =  ((float)$product_weight) * $product['cart_quantity'];
+                } else {
+                    $parcels[0]['weight'] +=  ((float)$product_weight) * $product['cart_quantity'];
+                }
+
+                $parcels[0]['width'] = $maxWidth;
+                $parcels[0]['height'] =$maxHeight;
+                $parcels[0]['depth'] = $maxDepth;
+                $parcels[0]['quantity'] = $quantity;
             } else
                 $parcels[] = $parcel;
         }

@@ -45,7 +45,7 @@ class DpdGeopost extends Module
 	{
 		$this->name = 'dpdgeopost';
 		$this->tab = 'shipping_logistics';
-		$this->version = '3.0.7';
+		$this->version = '3.0.8';
 		$this->author = 'DPD Romania';
         $this->bootstrap = true;
 		parent::__construct();
